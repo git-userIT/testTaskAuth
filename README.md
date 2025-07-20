@@ -28,3 +28,36 @@
 
 ! Важно: Нужно находится в корневом уровне репозитория, где лежит файл "Dockerfile"
 * __Введите команду__: docker-compose up -d --build
+
+
+---
+
+## Примеры запросов для проверки в Postman
+
+* POST запрос: http://localhost:63000/api/v1/register //Порт, который использует сервер - 63000
+
+Тело запроса:
+```
+{
+    "Username": "Пользователь",
+    "Password": "Password111",
+    "Email": "example@example.ru"
+}
+```
+Ответ запроса: 201 / 400
+
+* POST запрос: http://localhost:63000/api/v1/login
+
+Тело запроса:
+```
+{
+    "Username": "Пользователь",
+    "Password": "Password111"
+}
+```
+Ответ запроса: 200 с токеном в заголовке "Authorization" / 401
+
+* GET запрос: http://localhost:63000/api/v1/profile
+В поле в Header "Authorization" должен быть добавлен JWT токен, пришедший из предыдущего POST запроса
+
+Ответ запроса: 200 с токеном в заголовке "Authorization" / 403

@@ -49,7 +49,7 @@ func (api *API) register(w http.ResponseWriter, r *http.Request) {
 		}
 		res := pgsql.AddNewUser(user)
 		if res {
-			w.WriteHeader(http.StatusOK)
+			w.WriteHeader(http.StatusCreated)
 			return
 		} else {
 			w.WriteHeader(http.StatusBadRequest)

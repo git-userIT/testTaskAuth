@@ -1,0 +1,93 @@
+swagger: "2.0"
+info:
+  title: API Запросы
+  description: API для регистрации пользователя, аутентификации пользователя и получения JWT токена
+  version: "1.0"
+basePath: /api/v1
+schemes:
+  - http
+paths:
+  /login:
+    post:
+      tags:
+        - Аутентификация
+      summary: Аутентификация пользователя
+      description: Проверка учетных данных пользователя и возврат JWT токена в заголовке запроса
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Данные, передаваемые серверу в теле запроса
+          required: true
+          schema:
+            type: object
+            properties:
+              Username:
+                type: string
+                example: "Пользователь"
+              Password:
+                type: string
+                example: "Password"
+      responses:
+        200:
+          description: Выдан JWT токен пользователю. Аутентификация прошла успешно
+          headers:
+            Authorization:
+              type: string
+              description: JWT токен для аутентификации с данными о пользователе в payload
+	              #Payload токена 
+              	#Username:
+                # type: string
+                # example: "Пользователь"
+              	#Password:
+                # type: string
+                # example: "Password"
+		            #exp:
+		            # type: int64
+		            # example: 1405544146
+              example: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJRFVzZXIiOjAsIlVzZXJuYW1lIjoi0J_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwiUGFzc3dvcmQiOiJQYXNzd29yZDExMSIsIkVtYWlsIjoiIiwiZXhwIjoxNzUzMDIxMTYxfQ.eyomU2k72NtFt5iNw2qPzjpWlVVjVqoSXLkpaVXhcaVl8ENEQgV4d0DEpOM5k0T70zfTcWNez6gmj9pyO9qsCw
+        401:
+          description: Пользователь отсутствует в БД или другая ошибка
+
+  /profile:
+    get:
+      tags:
+        - Пользователь
+      summary: Получение данных пользователя из БД
+      description: Возвращает данные пользователя (ИД профиля из БД, username, email, токен). Проверяет данные из токена (срок действия и данные пользователя)
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          required: true
+          description: JWT токен в формате string
+          example: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJRFVzZXIiOjAsIlVzZXJuYW1lIjoi0J_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwiUGFzc3dvcmQiOiJQYXNzd29yZDExMSIsIkVtYWlsIjoiIiwiZXhwIjoxNzUzMDIxMTYxfQ.eyomU2k72NtFt5iNw2qPzjpWlVVjVqoSXLkpaVXhcaVl8ENEQgV4d0DEpOM5k0T70zfTcWNez6gmj9pyO9qsCw
+      responses:
+        200:
+          description: Данные профиля получены, вписанные в JWT токен (не в body запроса, а в payload токена)
+          headers:
+            Authorization:
+              type: string
+              description: JWT токен для аутентификации с данными о пользователе в payload
+                #Payload токена 
+                #IDuser:
+		              #type: int
+		              #example: 1
+                #Username:
+                  #type: string
+                  #example: "Пользователь"
+                #Email:
+                  #type: string
+                  #example: "exampe@example.com"
+                #ExpiresAt:
+                  #type: int64
+                  #example: 1405544146
+              example: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJRFVzZXIiOjAsIlVzZXJuYW1lIjoi0J_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwiUGFzc3dvcmQiOiJQYXNzd29yZDExMSIsIkVtYWlsIjoiIiwiZXhwIjoxNzUzMDIxMTYxfQ.eyomU2k72NtFt5iNw2qPzjpWlVVjVqoSXLkpaVXhcaVl8ENEQgV4d0DEpOM5k0T70zfTcWNez6gmj9pyO9qsCw
+        403:
+          description: Токен не действителен
+
